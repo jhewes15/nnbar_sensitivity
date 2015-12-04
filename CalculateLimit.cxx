@@ -14,7 +14,7 @@ CalculateLimit(TString run_name)
   for (int i = 0; i < 1000; i++) {
 
     // Open input file and read out info
-    TString filename = Form("%s/integral_%i.txt", output_dir.Data(), i);
+    TString filename = Form("%s/integral_%s_%i.txt", output_dir.Data(), run_name.Data(), i);
     ifstream infile;
     infile.open(filename.Data());
     infile >> lifetime[i] >> integral[i];
@@ -29,8 +29,9 @@ CalculateLimit(TString run_name)
   double A = cumulative_integral[999];
   double max = 0.9 * A;
 
-  // Find 90% confidence level!
   bool found_limit = false;
+
+  // Find 90% confidence level!
   for (int i = 0; i < 1000; i++) { 
     if (cumulative_integral[i] > max) {
       found_limit = true;
@@ -48,6 +49,6 @@ CalculateLimit(TString run_name)
     g_cumulative_4D->SetTitle("Cumulative Bayesian probability distribution");
     g_cumulative_4D->GetXaxis()->SetTitle("Upper limit of integration (yrs^{-1})");
     g_cumulative_4D->GetYaxis()->SetTitle("Integral value");
-    c->SaveAs(Form("./plots/%s.png");
+    c->SaveAs(Form("./plots/%s.png", run_name.Data()));
   }
 }
