@@ -1,1 +1,2 @@
-plots/*
+*.txt
+!input_list.txt
