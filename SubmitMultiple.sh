@@ -37,7 +37,14 @@ done
 
 shift $((OPTIND - 1))
 
-echo filename is ${filename}
+if [ -z "${filename}" ]; then
+  echo "
+You must specify a filename using the -r option!"
+  echo "${usage}"
+  exit 1
+else
+  echo filename is ${filename}
+fi
 
 workdir=`pwd`
 
@@ -56,4 +63,8 @@ for i in `seq 1 $n`; do
   sig_bkg=`echo ${params} | cut -f7 -d " "`
 
   bash ${workdir}/SubmitLimit.sh -r ${name} -p ${val_eff},${sig_eff},${val_exp},${sig_exp},${val_bkg},${sig_bkg},${val_bkg}
+
+  echo "OK let's figure this out. The parameters are being handed back as:"
+  echo "eff, sigma_eff, exp, sigma_exp, bkg, sigma_bkg, n"
+  echo "${val_eff},${sig_eff},${val_exp},${sig_exp},${val_bkg},${sig_bkg},${val_bkg}"
 done

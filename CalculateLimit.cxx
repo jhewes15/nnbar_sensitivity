@@ -1,13 +1,12 @@
 #include <fstream>
 
-CalculateLimit(TString run_name)
+void CalculateLimit(TString run_name, TString workdir)
 {
   // Define some variables
   double lifetime[1000];
   double integral[1000];
   double cumulative_integral[1000];
   double total = 0;
-  TString workdir = system("pwd");
   TString output_dir = Form("%s/output", workdir.Data());
 
   // Loop over input files
@@ -17,6 +16,10 @@ CalculateLimit(TString run_name)
     TString filename = Form("%s/integral_%s_%i.txt", output_dir.Data(), run_name.Data(), i);
     ifstream infile;
     infile.open(filename.Data());
+    if (!infile) {
+      std::cout << "Could not open input file " << filename.Data() << " for reading." << std::endl;
+      return;
+    }
     infile >> lifetime[i] >> integral[i];
     infile.close();
 
@@ -28,6 +31,11 @@ CalculateLimit(TString run_name)
   // Get integration constant
   double A = cumulative_integral[999];
   double max = 0.9 * A;
+
+  if (A == 0) {
+    std::cout << "The total integral is zero, so no limit was found." << std::endl;
+    return;
+  }
 
   bool found_limit = false;
 
