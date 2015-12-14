@@ -5,8 +5,8 @@ void RunStudy.cxx(int i_lifetime, int run_name, double exposure, double uncertai
   int n_studies = 10;
   
   // define constants
-  double mass = 40; // kt
-  double density = ; // neutrons per kt
+  double mass = 40;         // kt
+  double density = 3.316e29 // neutrons per kt
   
   // convert values of input parameters
   
