@@ -24,11 +24,7 @@ fi
 
 mkdir output
 
-if [ -z "${params}" ]; then
-  echo root -b -q ${WORKDIR_HOME}/Limit.cxx\(${PROCESS},\"${run_name}\"\)
-  root -b -q ${WORKDIR_HOME}/Limit.cxx\(${PROCESS},\"${run_name}\"\)
-else
-  echo root -b -q ${WORKDIR_HOME}/Limit.cxx\(${PROCESS},\"${run_name}\",true,${eff},${sigma_eff},${exp},${sigma_exp},${bkg},${sigma_bkg},${n_obs}\)
-  root -b -q ${WORKDIR_HOME}/Limit.cxx\(${PROCESS},\"${run_name}\",true,${eff},${sigma_eff},${exp},${sigma_exp},${bkg},${sigma_bkg},${n_obs}\)
-fi
+ifdh cp -D ${WORKDIR_HOME}/src/* ${WORKDIR_GRID}
 
+echo root -b -q ${WORKDIR_GRID}/RunStudy.cxx\(${PROCESS},\"${run_name}\",true,${eff},${sigma_eff},${exp},${sigma_exp},${bkg},${sigma_bkg},${n_obs}\)
+root -b -q ${WORKDIR_GRID}/RunStudy.cxx\(${PROCESS},\"${run_name}\",true,${eff},${sigma_eff},${exp},${sigma_exp},${bkg},${sigma_bkg},${n_obs}\)

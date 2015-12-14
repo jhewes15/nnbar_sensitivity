@@ -3,7 +3,7 @@
 usage="
 Usage: $(basename "$0")
 
-        -- Script perform an nnbar limit calculation on output --
+        -- Script to perform nnbar limit calculations from integral output --
 
     OPTIONS:
 
@@ -33,23 +33,32 @@ done
 
 shift $((OPTIND - 1))
 
+if [ -z "${filename}" ]; then
+  echo "
+You must specify a run name or list of run names using -r"
+  echo "${usage}"
+  exit 1
+fi
+
 workdir=`pwd`
 
 if [ -e ${workdir}/${filename}.txt ]; then
+  rm ./limit_vs_exposure.txt
   filename=${workdir}/${filename}.txt
   echo "Running for list of inputs ${filename}"
-  n=`wc -l ${filename}`
-  n=`echo ${n} | cut -f1 -d " "`
-  for i in `seq 1 ${n}`; do
+  a=`wc -l ${filename}`
+  b=`echo ${a} | cut -f1 -d " "`
+  for i in `seq 1 ${b}`; do
     run_name=`sed -n "${i} p" ${filename} | cut -f1 -d " "`
-    echo
-    echo
-    echo "Running for run name ${run_name}"
-    root -b -q CalculateLimit.cxx\(\"${run_name}\",\"${workdir}\"\)
+    echo "
+Running for run name ${run_name}"
+    limit=`root -l -b -q CalculateLimit.cxx\(\"${run_name}\",\"${workdir}\"\) | cat | cut -f5 -d " " | cut -f1 -d "!" | tr -d '\n'`
+    exposure=`sed -n "${i} p" ${filename} | cut -f2 -d " " | tr -d '\n'`
+    echo "${exposure} ${limit}" >> ./limit_vs_exposure.txt
   done
 elif [ -e ${workdir}/output/integral_${filename}_0.txt ]; then
   echo "Running for input ${filename}"
-  root -l -b -q CalculateLimit.cxx\(\"${filename}\",\"${workdir}\"\)
+  root -l -b -q CalculateLimit.cxx\(\"${filename}\",\"${workdir}\"\) > ./plots/${run_name}.txt
 else
   echo "Couldn't find any input or list of inputs associated with ${filename}"
 fi
