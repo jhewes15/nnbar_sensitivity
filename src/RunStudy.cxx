@@ -1,8 +1,19 @@
 #include "Limit.h"
 
+//
+// summary of the variables and their units:
+//
+// exposure is years
+// background is events per year
+// efficiency is just a fraction
+//
+// all uncertainties are fractional
+//
+
 void RunStudy.cxx(int i_lifetime, int run_name, double exposure, double uncertainty_exposure, double background, double uncertainty_background, double efficiency, double uncertainty_efficiency) {
   
   int n_studies = 10;
+  
   
   // define constants
   double mass = 40;         // kt
