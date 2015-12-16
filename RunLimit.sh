@@ -20,12 +20,11 @@ else
   sigma_exp=`echo ${params} | cut -f4 -d ","`
   bkg=`echo ${params} | cut -f5 -d ","`
   sigma_bkg=`echo ${params} | cut -f6 -d ","`
-  n_obs=`echo ${params} | cut -f7 -d ","`
 fi
 
 mkdir output
 
 ifdh cp -D ${WORKDIR_HOME}/src/* ${WORKDIR_GRID}
 
-echo root -b -q ${WORKDIR_GRID}/RunStudy.cxx\(${PROCESS},\"${run_name}\",true,${eff},${sigma_eff},${exp},${sigma_exp},${bkg},${sigma_bkg},${n_obs}\)
-root -b -q ${WORKDIR_GRID}/RunStudy.cxx\(${PROCESS},\"${run_name}\",true,${eff},${sigma_eff},${exp},${sigma_exp},${bkg},${sigma_bkg},${n_obs}\)
+echo root -b -q ${WORKDIR_GRID}/RunStudy.cxx\(${PROCESS},\"${run_name}\",${eff},${sigma_eff},${exp},${sigma_exp},${bkg},${sigma_bkg}\)
+root -b -q ${WORKDIR_GRID}/RunStudy.cxx\(${PROCESS},\"${run_name}\",${eff},${sigma_eff},${exp},${sigma_exp},${bkg},${sigma_bkg}\)

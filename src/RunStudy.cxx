@@ -28,7 +28,8 @@ void RunStudy.cxx(int i_lifetime, string run_name, double exposure, double uncer
   double sigma_eff = uncertainty_efficiency * eff;
   double bkg       = background * mass * exposure;
   double sigma_bkg = uncertainty_background * bkg;
-  
+  double n_obs     = bkg;
+
   for (int i = 0; i < n_studies; i++) {
     int process = (n_studies * i_lifetime) + i;
     Limit(process, run_name.c_str(), true, eff, sigma_eff, exp, sigma_exp, bkg, sigma_bkg, n_obs)
