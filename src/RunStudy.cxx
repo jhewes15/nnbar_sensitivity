@@ -1,3 +1,4 @@
+#include <string>
 #include "Limit.h"
 
 //
@@ -10,7 +11,7 @@
 // all uncertainties are fractional
 //
 
-void RunStudy(int i_lifetime, int run_name, double exposure, double uncertainty_exposure, double background, double uncertainty_background, double efficiency, double uncertainty_efficiency) {
+void RunStudy.cxx(int i_lifetime, string run_name, double exposure, double uncertainty_exposure, double background, double uncertainty_background, double efficiency, double uncertainty_efficiency) {
   
   int n_studies = 10;
   
@@ -30,6 +31,7 @@ void RunStudy(int i_lifetime, int run_name, double exposure, double uncertainty_
   
   for (int i = 0; i < n_studies; i++) {
     int process = (n_studies * i_lifetime) + i;
-    Limit(process, run_name, true, eff, sigma_eff, exp, sigma_exp, bkg, sigma_bkg, bkg)
+    Limit(process, run_name.c_str(), true, eff, sigma_eff, exp, sigma_exp, bkg, sigma_bkg, n_obs)
+
   }
 }
