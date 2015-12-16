@@ -26,5 +26,8 @@ mkdir output
 
 ifdh cp -D ${WORKDIR_HOME}/src/* ${WORKDIR_GRID}
 
+echo "Contents of grid workdir:"
+ls ${WORKDIR_GRID}
+
 echo root -b -q ${WORKDIR_GRID}/RunStudy.cxx\(${PROCESS},\"${run_name}\",${eff},${sigma_eff},${exp},${sigma_exp},${bkg},${sigma_bkg}\)
 root -b -q ${WORKDIR_GRID}/RunStudy.cxx\(${PROCESS},\"${run_name}\",${eff},${sigma_eff},${exp},${sigma_exp},${bkg},${sigma_bkg}\)

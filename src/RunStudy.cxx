@@ -11,7 +11,7 @@
 // all uncertainties are fractional
 //
 
-void RunStudy.cxx(int i_lifetime, string run_name, double exposure, double uncertainty_exposure, double background, double uncertainty_background, double efficiency, double uncertainty_efficiency) {
+void RunStudy(int i_lifetime, std::string run_name, double exposure, double uncertainty_exposure, double background, double uncertainty_background, double efficiency, double uncertainty_efficiency) {
   
   int n_studies = 10;
   
