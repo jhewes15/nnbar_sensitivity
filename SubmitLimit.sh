@@ -58,5 +58,5 @@ umask 002
 export WORKDIR_HOME=$(pwd)
 export OUTDIR=/uboone/data/users/jhewes15/limit
 
-jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N 100 -e WORKDIR_HOME -dOUT ${OUTDIR} file://${WORKDIR_HOME}/RunLimit.sh ${run_name} ${params}
+jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N 1 -e WORKDIR_HOME -dOUT ${OUTDIR} file://${WORKDIR_HOME}/RunLimit.sh ${run_name} ${params}
 

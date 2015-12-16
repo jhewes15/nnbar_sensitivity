@@ -1,4 +1,4 @@
-#include "limit.h"
+#include "Limit.h"
 
 // Debug output
 bool debug = false;

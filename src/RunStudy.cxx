@@ -17,8 +17,8 @@ void RunStudy(int i_lifetime, std::string run_name, double exposure, double unce
   
   
   // define constants
-  double mass = 40;         // kt
-  double density = 3.316e29 // neutrons per kt
+  double mass    = 40;       // kt
+  double density = 3.316e29; // neutrons per kt
   
   // convert values of input parameters
   
@@ -32,7 +32,6 @@ void RunStudy(int i_lifetime, std::string run_name, double exposure, double unce
 
   for (int i = 0; i < n_studies; i++) {
     int process = (n_studies * i_lifetime) + i;
-    Limit(process, run_name.c_str(), true, eff, sigma_eff, exp, sigma_exp, bkg, sigma_bkg, n_obs)
-
+    Limit(process, run_name.c_str(), true, eff, sigma_eff, exp, sigma_exp, bkg, sigma_bkg, n_obs);
   }
 }
