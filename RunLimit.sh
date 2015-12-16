@@ -6,7 +6,7 @@ params=${2}
 umask +w
 source /grid/fermiapp/products/uboone/setup_uboone.sh
 setup root
-setup idfhc
+setup ifdhc v1_7_2
 
 WORKDIR_GRID=${CONDOR_DIR_INPUT}
 
