@@ -48,7 +48,7 @@ fi
 
 workdir=`pwd`
 
-input_file=`pwd`/${filename}.txt
+input_file=${workdir}/input/${filename}.txt
 n=`wc -l ${input_file} | cut -f1 -d " " `
 
 for i in `seq 1 $n`; do
@@ -62,5 +62,10 @@ for i in `seq 1 $n`; do
   val_bkg=`echo ${params} | cut -f6 -d " "`
   sig_bkg=`echo ${params} | cut -f7 -d " "`
 
-  bash ${workdir}/SubmitLimit.sh -r ${name} -p ${val_eff},${sig_eff},${val_exp},${sig_exp},${val_bkg},${sig_bkg},${val_bkg}
+  if [ -z "${name}" ]; then
+    continue
+  else
+    echo bash ${workdir}/SubmitLimit.sh -r ${name} -p ${val_eff},${sig_eff},${val_exp},${sig_exp},${val_bkg},${sig_bkg},${val_bkg}
+    bash ${workdir}/SubmitLimit.sh -r ${name} -p ${val_eff},${sig_eff},${val_exp},${sig_exp},${val_bkg},${sig_bkg},${val_bkg}
+  fi
 done
