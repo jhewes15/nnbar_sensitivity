@@ -55,17 +55,27 @@ for i in `seq 1 $n`; do
   params=`sed -n "${i} p" ${input_file}`
 
   name=`echo ${params} | cut -f1 -d " "`
-  val_eff=`echo ${params} | cut -f2 -d " "`
-  sig_eff=`echo ${params} | cut -f3 -d " "`
-  val_exp=`echo ${params} | cut -f4 -d " "`
-  sig_exp=`echo ${params} | cut -f5 -d " "`
+  val_exp=`echo ${params} | cut -f2 -d " "`
+  sig_exp=`echo ${params} | cut -f3 -d " "`
+  val_eff=`echo ${params} | cut -f4 -d " "`
+  sig_eff=`echo ${params} | cut -f5 -d " "`
   val_bkg=`echo ${params} | cut -f6 -d " "`
   sig_bkg=`echo ${params} | cut -f7 -d " "`
 
   if [ -z "${name}" ]; then
     continue
   else
-    echo bash ${workdir}/SubmitLimit.sh -r ${name} -p ${val_eff},${sig_eff},${val_exp},${sig_exp},${val_bkg},${sig_bkg},${val_bkg}
-    bash ${workdir}/SubmitLimit.sh -r ${name} -p ${val_eff},${sig_eff},${val_exp},${sig_exp},${val_bkg},${sig_bkg},${val_bkg}
+    echo "SubmitMultiple.sh parameter summary:"
+    echo "  Exp     - ${val_exp}"
+    echo "  Exp_sig - ${sig_exp}"
+    echo "  Eff     - ${val_eff}"
+    echo "  Eff_sig - ${sig_eff}"
+    echo "  Bkg     - ${val_bkg}"
+    echo "  Bkg_sig - ${sig_bkg}"
+
+    params=${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${val_bkg}
+    echo jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N 100 -e WORKDIR_HOME -dOUT ${OUTDIR} file://${WORKDIR_HOME}/RunLimit.sh ${name} ${params}
+    jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N 100 -e WORKDIR_HOME -dOUT ${OUTDIR} file://${WORKDIR_HOME}/RunLimit.sh ${name} ${params}
   fi
 done
+
