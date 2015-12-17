@@ -42,9 +42,8 @@ fi
 
 workdir=`pwd`
 
-if [ -e ${workdir}/${filename}.txt ]; then
-  rm ./limit_vs_exposure.txt
-  filename=${workdir}/${filename}.txt
+if [ -e ${workdir}/input/${filename}.txt ]; then
+  filename=${workdir}/input/${filename}.txt
   echo "Running for list of inputs ${filename}"
   a=`wc -l ${filename}`
   b=`echo ${a} | cut -f1 -d " "`
@@ -58,7 +57,7 @@ Running for run name ${run_name}"
   done
 elif [ -e ${workdir}/output/integral_${filename}_0.txt ]; then
   echo "Running for input ${filename}"
-  root -l -b -q CalculateLimit.cxx\(\"${filename}\",\"${workdir}\"\) > ./plots/${run_name}.txt
+  root -l -b -q CalculateLimit.cxx\(\"${filename}\",\"${workdir}\"\)
 else
   echo "Couldn't find any input or list of inputs associated with ${filename}"
 fi
