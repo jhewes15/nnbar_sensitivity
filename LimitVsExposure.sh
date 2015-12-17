@@ -53,9 +53,12 @@ if [ -e ${workdir}/input/${filename}.txt ]; then
     if [ -z "${run_name}" ]; then
       continue
     else
-      limit=`root -l -b -q ${workdir}/src/CalculateLimit.cxx\(\"${run_name}\",\"${workdir}\"\) | cat | cut -f5 -d " " | cut -f1 -d "!" | tr -d '\n'`
       echo "
-For run name ${run_name}, lifetime limit is ${limit}."      
+Running for run name ${run_name}"
+      limit=`root -l -b -q ${workdir}/src/CalculateLimit.cxx\(\"${run_name}\",\"${workdir}\"\) | cat | cut -f5 -d " " | cut -f1 -d "!" | tr -d '\n'`
+      
+      exposure=`sed -n "${i} p" ${filename} | cut -f2 -d " " | tr -d '\n'`
+      echo "${exposure} ${limit}" >> ${workdir}/plots/limit_vs_exposure.txt
     fi
   done
 elif [ -e ${workdir}/output/integral_${filename}_0.txt ]; then
