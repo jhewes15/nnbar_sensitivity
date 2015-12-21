@@ -31,12 +31,8 @@ echo "  Bkg     - ${val_bkg}"
 echo "  Bkg_sig - ${sig_bkg}"
 
 mkdir output
-
 ifdh cp -D ${WORKDIR_HOME}/src/* ${WORKDIR_GRID}
 
-echo "Contents of grid workdir:"
-ls ${WORKDIR_GRID}
-
-echo root -b -q ${WORKDIR_GRID}/RunStudy.cxx\(${PROCESS},\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg}\)
-root -b -q ${WORKDIR_GRID}/RunStudy.cxx\(${PROCESS},\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg}\)
+echo root -b -q ${WORKDIR_GRID}/Limit.cxx\(\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${PROCESS}\)
+root -b -q ${WORKDIR_GRID}/Limit.cxx\(\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${PROCESS}\)
 
