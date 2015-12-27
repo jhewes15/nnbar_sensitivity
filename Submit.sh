@@ -47,6 +47,8 @@ else
 fi
 
 workdir=`pwd`
+outdir="/uboone/data/users/jhewes15/limit"
+export WORKDIR_HOME=${workdir}
 
 input_file=${workdir}/input/${filename}.txt
 n=`wc -l ${input_file} | cut -f1 -d " " `
@@ -74,8 +76,8 @@ for i in `seq 1 $n`; do
     echo "  Bkg_sig - ${sig_bkg}"
 
     params=${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${val_bkg}
-    echo jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N 100 -e WORKDIR_HOME -dOUT ${OUTDIR} file://${WORKDIR_HOME}/RunLimit.sh ${name} ${params}
-    jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N 100 -e WORKDIR_HOME -dOUT ${OUTDIR} file://${WORKDIR_HOME}/RunLimit.sh ${name} ${params}
+    echo jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N 100 -e WORKDIR_HOME -dOUT ${outdir} file://${workdir}/RunLimit.sh ${name} ${params}
+    jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N 100 -e WORKDIR_HOME -dOUT ${outdir} file://${workdir}/RunLimit.sh ${name} ${params}
   fi
 done
 

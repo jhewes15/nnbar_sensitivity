@@ -1,7 +1,7 @@
 #ifndef INTEGRATOR_CXX
 #define INTEGRATOR_CXX
 
-#include "integrator.h"
+#include "Integrator.h"
 
 // Standard constructor
 Integrator::Integrator()

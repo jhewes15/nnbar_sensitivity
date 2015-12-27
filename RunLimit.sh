@@ -30,7 +30,10 @@ echo "  Eff_sig - ${sig_eff}"
 echo "  Bkg     - ${val_bkg}"
 echo "  Bkg_sig - ${sig_bkg}"
 
-mkdir output
+if [ ! -d ${output} ]; then
+  mkdir output
+fi
+
 ifdh cp -D ${WORKDIR_HOME}/src/* ${WORKDIR_GRID}
 
 echo root -b -q ${WORKDIR_GRID}/Limit.cxx\(\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${PROCESS}\)

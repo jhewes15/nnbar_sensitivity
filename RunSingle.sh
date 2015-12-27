@@ -43,18 +43,18 @@ shift $((OPTIND - 1))
 
 if [ -z "${run_name}" ]; then
   echo "
-You must specify a filename using the -r option!"
-  echo "${usage}"
+You must specify a filename using the -r option!" >&2
+  echo "${usage}" >&2
   exit 1
-else if [ -z "${params}" ]; then
+elif [ -z "${params}" ]; then
   echo "
-You must provide parameters using the -p option!"
-  echo "${usage}"
+You must provide parameters using the -p option!" >&2
+  echo "${usage}" >&2
   exit 1
-else if [ -z "${process}" ]; then
+elif [ -z "${process}" ]; then
   echo "
-You must provide process number using the -n option!"
-  echo "${usage}"
+You must provide process number using the -n option!" >&2
+  echo "${usage}" >&2
   exit 1
 fi
 
@@ -66,7 +66,7 @@ val_bkg=`echo ${params} | cut -f5 -d ","`
 sig_bkg=`echo ${params} | cut -f6 -d ","`
 
 workdir=`pwd`
-outdir="/uboone/data/users/jhewes15/limit"
+export outdir="/uboone/data/users/jhewes15/limit"
 
 echo root -b -q ${workdir}/src/Single.cxx\(\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${process}\)
 root -b -q ${workdir}/src/Single.cxx\(\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${process}\)

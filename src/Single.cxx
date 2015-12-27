@@ -21,10 +21,10 @@ void Single(string run_name, double valExp, double sigExp, double valEff, double
   ig->PrintParams();
   ig->FindWidthRange();
 
-  std::vector<double> lifetime = ig->Limit();
+  std::vector<double> integral = ig->Limit();
 
   ofstream outfile;
-  TString outfilename = Form("%s/integral_%s_%i.txt", getenv("CONDOR_DIR_OUT"), run_name, study);
+  TString outfilename = Form("%s/integral_%s_%i.txt", getenv("outdir"), run_name.c_str(), process);
   std::cout << "Outfilename is " << outfilename.Data() << std::endl;
   outfile.open(outfilename.Data());
   outfile << integral[0] << " " << integral[1];
