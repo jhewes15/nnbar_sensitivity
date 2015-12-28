@@ -10,17 +10,12 @@ setup ifdhc v1_7_2
 
 WORKDIR_GRID=${CONDOR_DIR_INPUT}
 
-if [ -z "${params}" ]; then
-  echo Using Super-K parameters
-else
-  echo Using custom parameters
-  val_exp=`echo ${params} | cut -f1 -d ","`
-  sig_exp=`echo ${params} | cut -f2 -d ","`
-  val_eff=`echo ${params} | cut -f3 -d ","`
-  sig_eff=`echo ${params} | cut -f5 -d ","`
-  val_bkg=`echo ${params} | cut -f5 -d ","`
-  sig_bkg=`echo ${params} | cut -f6 -d ","`
-fi
+val_exp=`echo ${params} | cut -f1 -d ","`
+sig_exp=`echo ${params} | cut -f2 -d ","`
+val_eff=`echo ${params} | cut -f3 -d ","`
+sig_eff=`echo ${params} | cut -f5 -d ","`
+val_bkg=`echo ${params} | cut -f5 -d ","`
+sig_bkg=`echo ${params} | cut -f6 -d ","`
 
 echo "RunLimit.sh parameter summary:"
 echo "  Exp     - ${val_exp}"

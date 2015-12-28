@@ -44,12 +44,12 @@ workdir=`pwd`
 
 if [ -e ${workdir}/input/${filename}.txt ]; then
   rm ./limit_vs_exposure.txt
-  filename=${workdir}/input/${filename}.txt
+  filepath=${workdir}/input/${filename}.txt
   echo "Running for list of inputs ${filename}"
-  a=`wc -l ${filename}`
+  a=`wc -l ${filepath}`
   b=`echo ${a} | cut -f1 -d " "`
   for i in `seq 1 ${b}`; do
-    run_name=`sed -n "${i} p" ${filename} | cut -f1 -d " "`
+    run_name=`sed -n "${i} p" ${filepath} | cut -f1 -d " "`
     if [ -z "${run_name}" ]; then
       continue
     else
@@ -57,7 +57,7 @@ if [ -e ${workdir}/input/${filename}.txt ]; then
 Running for run name ${run_name}"
       limit=`root -l -b -q ${workdir}/src/CalculateLimit.cxx\(\"${run_name}\",\"${workdir}\"\) | cat | cut -f5 -d " " | cut -f1 -d "!" | tr -d '\n'`
       
-      exposure=`sed -n "${i} p" ${filename} | cut -f2 -d " " | tr -d '\n'`
+      exposure=`sed -n "${i} p" ${filepath} | cut -f2 -d " " | tr -d '\n'`
       echo "${exposure} ${limit}" >> ${workdir}/plots/limit_vs_exposure.txt
     fi
   done
