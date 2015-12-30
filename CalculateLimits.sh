@@ -41,6 +41,11 @@ You must specify a run name or list of run names using -r"
 fi
 
 workdir=`pwd`
+output="${workdir}/plots/${filename}.txt"
+
+if [ -f ${output} ]; then
+  rm ${output}
+fi
 
 if [ -e ${workdir}/input/${filename}.txt ]; then
   filename=${workdir}/input/${filename}.txt
@@ -52,9 +57,8 @@ if [ -e ${workdir}/input/${filename}.txt ]; then
     if [ -z "${run_name}" ]; then
       continue
     else
-      limit=`root -l -b -q ${workdir}/src/CalculateLimit.cxx\(\"${run_name}\",\"${workdir}\"\) | cat | cut -f5 -d " " | cut -f1 -d "!" | tr -d '\n'`
-      echo "
-For run name ${run_name}, lifetime limit is ${limit}."      
+      limit=`root -l -b -q ${workdir}/src/CalculateLimit.cxx\(\"${run_name}\",\"${workdir}\"\) | cat | sed -n 3p`
+      echo "${run_name} ${limit}" >> ${output}
     fi
   done
 elif [ -e ${workdir}/output/integral_${filename}_0.txt ]; then
