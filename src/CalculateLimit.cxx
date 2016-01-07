@@ -18,11 +18,9 @@ double CalculateLimit(string run_name, string workdir)
     std::cout << "Could not open input file " << filename.c_str() << " for reading." << std::endl;
     return;
   }
-  std::string line;
 
   // Loop over input files
   for (int i = 0; i < 1000; i++) {
-    std::getline(infile, line);
     infile >> width[i] >> integral[i];
 
     // Add up cumulative integral
