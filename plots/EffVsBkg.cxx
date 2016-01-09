@@ -29,7 +29,19 @@ void EffVsBkg() {
   }
   
   TCanvas * c = new TCanvas ("c", "", 1600, 800);
-  h->Draw("colz");
+
+  // gonna try smoothing
+  h->Smooth();
+
+  //h->Draw("colz");
+
+  // gonna try a contour plot
+  h->Draw("cont4z");
+  gStyle->SetNumberContours(99);
+
+  // also gonna try a log scale
+  c->SetLogz();
+
   h->GetXaxis()->SetTitle("Efficiency");
   h->GetYaxis()->SetTitle("Background rate");
   h->SetTitle("nnbar sensitivity, efficiency vs background");

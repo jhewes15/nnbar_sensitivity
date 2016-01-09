@@ -7,8 +7,12 @@
 Integrator::Integrator()
 {
   _verbose = false;
-  _mass    = 40;           // kt
-  _density = 3.3164892e32; // neutrons / (kt/yr)
+//  _mass    = 40;           // kt
+//  _density = 3.3164892e32; // neutrons / (kt/yr)
+
+// adding in super-k parameters for debugging purposes
+  _mass    = 50;
+  _density = 4.9e32;
 }
 
 // Set input parameters
