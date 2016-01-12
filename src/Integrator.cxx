@@ -7,7 +7,7 @@
 Integrator::Integrator()
 {
   _verbose = false;
-//  _mass    = 40;           // kt
+//  _mass    = 20;           // kt
 //  _density = 3.3164892e32; // neutrons / kt
 
 // adding in super-k parameters for debugging purposes

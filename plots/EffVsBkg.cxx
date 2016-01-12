@@ -19,7 +19,7 @@ void EffVsBkg() {
   string temp_name;
   double temp_lifetime;
   
-  TH2 * h = new TH2D("h", "", 10, 0, 1, 10, 0, 40);
+  TH2 * h = new TH2D("h", "", 10, 0, 100, 10, 0, 40);
   
   for (int i = 1; i < 11; i++) {
     for (int j = 1; j < 11; j++) {
@@ -33,18 +33,22 @@ void EffVsBkg() {
   // gonna try smoothing
   h->Smooth();
 
-  //h->Draw("colz");
+  h->Draw("colz");
 
   // gonna try a contour plot
-  h->Draw("cont4z");
+//  h->Draw("cont4z");
   gStyle->SetNumberContours(99);
 
   // also gonna try a log scale
   c->SetLogz();
 
-  h->GetXaxis()->SetTitle("Efficiency");
+  // draw a super-k point on the plot
+  TPoint * p = new TPoint(12, 24.1);
+  p->Draw();
+
+  h->GetXaxis()->SetTitle("Efficiency (%)");
   h->GetYaxis()->SetTitle("Background rate");
-  h->SetTitle("nnbar sensitivity, efficiency vs background");
+  //h->SetTitle("nnbar sensitivity, efficiency vs background");
   c->SaveAs("eff_vs_bkg.png");
 }
 

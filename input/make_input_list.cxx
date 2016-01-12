@@ -13,7 +13,7 @@ void make_input_list() {
     double eff = (i + 1) * eff_u;
     for (int j = 0; j < 10; j++) {
       double bkg = (j + 1) * bkg_u;
-      f << i << "_" << j << " 4 0.03 " << eff << " 0.06 " << bkg << " 0.25\n";
+      f << i << "_" << j << " 4 0.03 " << eff << " 0.03 " << bkg << " 0.25\n";
     }
   }
   f.close();
