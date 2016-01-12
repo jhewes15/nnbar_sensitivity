@@ -86,25 +86,26 @@ void Integrator::FindWidthRange()
   double xmin3D[3];
   double xmax3D[3];
 
-  for (int i = 0; i < 10; i++)
-  {
-    globalWidthMax = pow(10, -30 - i);
+  xmin3D[0] = _intervals[0];
+  xmax3D[0] = xmin3D[0] + (100 * _intervals[1]);
+  xmin3D[1] = _intervals[2];
+  xmax3D[1] = xmin3D[1] + (100 * _intervals[3]);
+  xmin3D[2] = _intervals[4];
+  xmax3D[2] = xmin3D[2] + (100 * _intervals[5]);
 
-    xmin3D[0] = _intervals[0];
-    xmax3D[0] = xmin3D[0] + (100 * _intervals[1]);
 
-    xmin3D[1] = _intervals[2];
-    xmax3D[1] = xmin3D[1] + (100 * _intervals[3]);
+  globalWidthMax = 1e-40;
+  double cut_value = 1e-5 * ig3D.Integral(xmin3D, xmax3D);
 
-    xmin3D[2] = _intervals[4];
-    xmax3D[2] = xmin3D[2] + (100 * _intervals[5]);
-
-    if (ig3D.Integral(xmin3D, xmax3D) == 0) continue;
-    else {
+  for (int i = 0; i < 10; i++) {
+    globalWidthMax = pow(10, -39 + i);
+    if (ig3D.Integral(xmin3D, xmax3D) < cut_value) {
       _widthMax = globalWidthMax;
       return;
     }
   }
+  std::cerr << "If you made it to the end of this function, it means something went wrong. Exiting..." << std::endl;
+  exit(1);
 }
 
 // Limit calculation function

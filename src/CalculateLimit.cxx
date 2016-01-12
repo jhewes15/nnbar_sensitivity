@@ -49,14 +49,14 @@ double CalculateLimit(string run_name, string workdir)
     }
   }
 
-/*  if (found_limit) {
+  if (found_limit) {
     TCanvas * c = new TCanvas("c", "", 2000, 1600);
-    TGraph * g_cumulative_4D = new TGraph(1000, lifetime, cumulative_integral);
+    TGraph * g_cumulative_4D = new TGraph(1000, width, cumulative_integral);
     g_cumulative_4D->SetLineWidth(3);
     g_cumulative_4D->Draw("ac");
     g_cumulative_4D->SetTitle("Cumulative Bayesian probability distribution");
     g_cumulative_4D->GetXaxis()->SetTitle("Upper limit of integration (yrs^{-1})");
     g_cumulative_4D->GetYaxis()->SetTitle("Integral value");
-    c->SaveAs(Form("./plots/%s.png", run_name.c_str()));
-  }*/
+    c->SaveAs(Form("./plots/cumulative_%s.png", run_name.c_str()));
+  }
 }
