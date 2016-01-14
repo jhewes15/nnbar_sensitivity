@@ -77,10 +77,10 @@ for i in `seq 1 $n`; do
     echo "  Bkg_sig - ${sig_bkg}"
 
     if [ -z "${n_obs}" ]; then
-      params=${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${val_bkg}
+      params=${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg}
     else
       echo "  N_obs   - ${n_obs}"
-      params=${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${val_bkg},${n_obs}
+      params=${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${n_obs}
     fi
 
     echo jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N 100 -e WORKDIR_HOME -dOUT ${outdir} file://${workdir}/RunLimit.sh ${name} ${params}
