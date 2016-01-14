@@ -35,8 +35,9 @@ void Limit(string run_name, double valExp, double sigExp, double valEff, double 
     outfile.open(outfilename.Data());
     outfile << integral[0] << " " << integral[1];
     outfile.close();
-
-    delete ig;
   }
+
+  //clean up
+  delete ig;
 }
 
