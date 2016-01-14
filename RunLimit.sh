@@ -16,6 +16,7 @@ val_eff=`echo ${params} | cut -f3 -d ","`
 sig_eff=`echo ${params} | cut -f5 -d ","`
 val_bkg=`echo ${params} | cut -f5 -d ","`
 sig_bkg=`echo ${params} | cut -f6 -d ","`
+n_obs=`echo ${params}   | cut -f7 -d ","`
 
 echo "RunLimit.sh parameter summary:"
 echo "  Exp     - ${val_exp}"
@@ -31,6 +32,12 @@ fi
 
 ifdh cp -D ${WORKDIR_HOME}/src/* ${WORKDIR_GRID}
 
-echo root -b -q ${WORKDIR_GRID}/Limit.cxx\(\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${PROCESS}\)
-root -b -q ${WORKDIR_GRID}/Limit.cxx\(\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${PROCESS}\)
+if [ -z "${n_obs}" ]; then
+  echo root -b -q ${WORKDIR_GRID}/Limit.cxx\(\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${PROCESS}\)
+  root -b -q ${WORKDIR_GRID}/Limit.cxx\(\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${PROCESS}\)
+else
+  echo "  N_obs   - ${n_obs}"
+  echo root -b -q ${WORKDIR_GRID}/Limit.cxx\(\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${PROCESS},${n_obs}\)
+  root -b -q ${WORKDIR_GRID}/Limit.cxx\(\"${run_name}\",${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${PROCESS},${n_obs}\)
+fi
 

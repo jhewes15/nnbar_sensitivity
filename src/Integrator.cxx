@@ -62,7 +62,7 @@ void Integrator::SetParams(std::vector<double> params)
 
 void Integrator::CheckParams()
 {
-  if (_inputParams.size() == 6) return;
+  if (_inputParams.size() == 6 && _finalParams.size() == 7) return;
   else
   {
     std::cerr << "Please set parameters using SetParams before calling this function." << std::endl;
@@ -173,7 +173,7 @@ void Integrator::PrintParams()
   std::cout << "  Total exposure: "   << _finalParams[0]       << " ± " << _finalParams[1]       << " neutrons" << std::endl;
   std::cout << "  Total efficiency: " << 100 * _finalParams[2] << " ± " << 100 * _finalParams[3] << " %"        << std::endl;
   std::cout << "  Total background: " << _finalParams[4]       << " ± " << _finalParams[5]       << " events"   << std::endl;
-  
+  std::cout << "  Event rate: "       << _finalParams[6]                                         << " events"   << std::endl; 
   std::cout << std::endl;
 }
 

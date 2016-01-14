@@ -63,6 +63,7 @@ for i in `seq 1 $n`; do
   sig_eff=`echo ${params} | cut -f5 -d " "`
   val_bkg=`echo ${params} | cut -f6 -d " "`
   sig_bkg=`echo ${params} | cut -f7 -d " "`
+  n_obs=`echo ${params}   | cut -f8 -d " "`
 
   if [ -z "${name}" ]; then
     continue
@@ -75,7 +76,13 @@ for i in `seq 1 $n`; do
     echo "  Bkg     - ${val_bkg}"
     echo "  Bkg_sig - ${sig_bkg}"
 
-    params=${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${val_bkg}
+    if [ -z "${n_obs}" ]; then
+      params=${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${val_bkg}
+    else
+      echo "  N_obs   - ${n_obs}"
+      params=${val_exp},${sig_exp},${val_eff},${sig_eff},${val_bkg},${sig_bkg},${val_bkg},${n_obs}
+    fi
+
     echo jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N 100 -e WORKDIR_HOME -dOUT ${outdir} file://${workdir}/RunLimit.sh ${name} ${params}
     jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N 100 -e WORKDIR_HOME -dOUT ${outdir} file://${workdir}/RunLimit.sh ${name} ${params}
   fi

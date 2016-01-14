@@ -115,10 +115,11 @@ public:
   // Setter/getter functions
   void SetProcess(int process) { _process = process; };
   void SetParams(std::vector<double> params);
+  void SetRate(double n_obs) { CheckParams(); _finalParams[6] = n_obs; };
   void CheckParams();
   void SetMass(double mass) { _mass = mass; };
   void SetDensity(double density) { _density = density; };
-  std::vector<double> GetParams() { CheckParams; return _finalParams; };
+  std::vector<double> GetParams() { CheckParams(); return _finalParams; };
   double GetWidthMax() { return _widthMax; };
   double GetLifetime90CL() { return (1 / _width); };
   

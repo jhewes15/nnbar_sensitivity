@@ -3,7 +3,7 @@
 #include <fstream>
 
 // code to run the limit calculation
-void Limit(string run_name, double valExp, double sigExp, double valEff, double sigEff, double valBkg, double sigBkg, int process)
+void Limit(string run_name, double valExp, double sigExp, double valEff, double sigEff, double valBkg, double sigBkg, int process, double n_obs = -1)
 {
   std::vector<double> params;
   params.reserve(6);
@@ -14,17 +14,18 @@ void Limit(string run_name, double valExp, double sigExp, double valEff, double 
   params.push_back(valBkg);
   params.push_back(sigBkg);
 
+  // set up the integrator function
+  Integrator * ig = new Integrator();
+  ig->SetParams(params);
+  ig->FindWidthRange();
+  if (n_obs > 0) ig->SetRate(n_obs);
+  ig->PrintParams();
+
   // loop over, do it 10 times
   for (int i = 0; i < 10; i++)
   {
     int study = (process * 10) + i;
-    
-    Integrator * ig = new Integrator();
-
     ig->SetProcess(study);
-    ig->SetParams(params);
-    ig->PrintParams();
-    ig->FindWidthRange();
 
     std::vector<double> integral = ig->Limit();
 
