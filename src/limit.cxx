@@ -71,7 +71,7 @@ int f(unsigned ndim, const double * x, void * params, unsigned fdim, double * fv
 int main(int argc, char * argv[]) {
   
   // dune mass / density
-  double mass    = 20;           // kt
+  double mass    = 40;           // kt
   double density = 3.3164892e32; // neutrons / kt
   
   // adding in super-k parameters for debugging purposes

@@ -13,16 +13,19 @@ Usage: $(basename "$0")
         -r            Input filename (required)
                         Should be in format <current_directory>/input/<filename>.txt
                         Look at input_list.txt for an example of how this file looks
+        -n            Select a subset to process (optional)
 "
 
 # Parse optional arguments.
 
-while getopts "hr:" option; do
+while getopts "hr:n:" option; do
   case "${option}" in
     h)  echo "${usage}"
         exit
         ;;
     r)  filename=${OPTARG}
+        ;;
+    n)  subset=${OPTARG}
         ;;
     :)  printf "Missing argument for -%s\n" "${OPTARG}" >&2
         echo "${usage}" >&2
@@ -58,7 +61,17 @@ fi
 
 n=`wc -l ${infile} | sed -e 's/^[ \t]*//' | cut -f1 -d " "`
 
-for i in `seq 1 $n`; do
+if [ ! -z "${subset}" ]; then
+  subset=$((subset - 1))
+  min=$((1000 * subset))
+  max=$((min + 1000))
+  min=$((min + 1))
+else
+  min=1
+  max=${n}
+fi
+
+for i in `seq $min $max`; do
   params=`sed -n "${i} p" ${infile}`
 
   name=`echo ${params}    | cut -f1 -d " "`
