@@ -4,7 +4,7 @@ void EffVsBkg() {
   
   gStyle->SetOptStat(0);
   
-  string input_file = "eff_vs_bkg.txt";
+  string input_file = "../output/eff_vs_bkg.txt";
   
   std::vector<double> lifetime;
   lifetime.reserve(100);
