@@ -134,7 +134,7 @@ int main(int argc, char * argv[]) {
   double norm = 1 / val;
   double minimum = 0;
   double maximum = 1e-30;
-  double accuracy = 1e-5;
+  double accuracy = 1e-3;
   double width;
 
   while(true) {
