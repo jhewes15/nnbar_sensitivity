@@ -1,10 +1,10 @@
 #include <fstream>
 
-void EffVsBkg() {
+void EffVsBkgZoomed() {
   
   gStyle->SetOptStat(0);
   
-  string input_file = "../output/eff_vs_bkg.txt";
+  string input_file = "../output/eff_vs_bkg_zoomed.txt";
     
   ifstream infile;
   infile.open(input_file.c_str());
@@ -13,7 +13,7 @@ void EffVsBkg() {
     return;
   }
   
-  TH2 * h = new TH2D("h", "", 100, 0, 100, 100, 0, 40);
+  TH2 * h = new TH2D("h", "", 100, 50, 100, 100, 0, 10);
   
   string line;
 
@@ -59,6 +59,6 @@ void EffVsBkg() {
   h->GetYaxis()->SetTitleSize(0.05);
   h->GetZaxis()->SetTitle("90% CL lifetime limit");
   //h->SetTitle("nnbar sensitivity, efficiency vs background");
-  c->SaveAs("eff_vs_bkg.png");
+  c->SaveAs("eff_vs_bkg_zoomed.png");
 }
 

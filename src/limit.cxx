@@ -29,9 +29,9 @@ double heaviside(double param)
 }
 
 // Factorial function
-double factorial(double n)
+int factorial(int n)
 {
-  double n_factorial = 1;
+  int n_factorial = 1;
   for (int i = n; i > 0; i--)
     n_factorial *= i;
   return n_factorial;
@@ -48,6 +48,8 @@ int f(unsigned ndim, const double * x, void * params, unsigned fdim, double * fv
 
   std::vector<double> integralParams = *((std::vector<double> *) params);
 
+  int n_obs = round(integralParams[6]);
+
   // Evaluate probability distributions for variables
   double p_exposure   = gaus(exposure  , integralParams[0], integralParams[1]);
   double p_efficiency = gaus(efficiency, integralParams[2], integralParams[3]);
@@ -55,11 +57,11 @@ int f(unsigned ndim, const double * x, void * params, unsigned fdim, double * fv
   double p_width      = heaviside(width);
 
   // Get some other useful variables
-  double n_factorial = factorial(integralParams[6]);
+  int n_factorial = factorial(integralParams[6]);
   double param = (exposure * efficiency * width) + background;
 
   // Evaluate Bayesian function
-  double bayesian = (exp(-1 * param) * pow(param, integralParams[6])) / n_factorial;
+  double bayesian = (exp(-1 * param) * pow(param, n_obs)) / n_factorial;
 
   // Put it all together
   double everything = bayesian * p_exposure * p_efficiency * p_background * p_width;
