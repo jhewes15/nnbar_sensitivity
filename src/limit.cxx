@@ -48,8 +48,6 @@ int f(unsigned ndim, const double * x, void * params, unsigned fdim, double * fv
 
   std::vector<double> integralParams = *((std::vector<double> *) params);
 
-  int n_obs = round(integralParams[6]);
-
   // Evaluate probability distributions for variables
   double p_exposure   = gaus(exposure  , integralParams[0], integralParams[1]);
   double p_efficiency = gaus(efficiency, integralParams[2], integralParams[3]);
@@ -57,11 +55,11 @@ int f(unsigned ndim, const double * x, void * params, unsigned fdim, double * fv
   double p_width      = heaviside(width);
 
   // Get some other useful variables
-  int n_factorial = factorial(integralParams[6]);
+  double n_factorial = factorial(integralParams[6]);
   double param = (exposure * efficiency * width) + background;
 
   // Evaluate Bayesian function
-  double bayesian = (exp(-1 * param) * pow(param, n_obs)) / n_factorial;
+  double bayesian = (exp(-1 * param) * pow(param, integralParams[6])) / n_factorial;
 
   // Put it all together
   double everything = bayesian * p_exposure * p_efficiency * p_background * p_width;
@@ -106,6 +104,10 @@ int main(int argc, char * argv[]) {
     finalParams.push_back(atof(argv[8]));
   else
     finalParams.push_back(finalParams[4]);
+  if (double(int(finalParams[6])) != finalParams[6]) {
+    std::cerr << "Error! Number of observed events ( = " << finalParams[6] << " ) must be an integer!" << std::endl;
+    exit(1);
+  }
 
   // figure out limits
   double xmin[4];
