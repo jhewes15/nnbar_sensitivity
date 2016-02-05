@@ -29,11 +29,11 @@ double heaviside(double param)
 }
 
 // Factorial function
-int factorial(int n)
+double factorial(double n)
 {
-  int n_factorial = 1;
+  double n_factorial = 1;
   for (int i = n; i > 0; i--)
-    n_factorial *= i;
+    n_factorial *= (double) i;
   return n_factorial;
 }
 
