@@ -7,7 +7,7 @@ void make_input_list() {
   f.open("eff_vs_bkg.txt");
 
   double n_eff = 100;
-  double n_bkg = 100;
+  double n_bkg = 40;
 
   double eff_total = 1;
   double bkg_total = 0.25;

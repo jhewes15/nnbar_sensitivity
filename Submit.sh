@@ -49,7 +49,7 @@ fi
 
 workdir=`pwd`
 
-num_jobs=10
+num_jobs=100
 
 mail=""
 
