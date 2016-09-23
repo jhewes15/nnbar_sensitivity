@@ -71,8 +71,12 @@ int f(unsigned ndim, const double * x, void * params, unsigned fdim, double * fv
 int main(int argc, char * argv[]) {
   
   // dune mass / density
-  double mass    = 40;           // kt
-  double density = 3.3164892e32; // neutrons / kt
+  //double mass    = 40;           // kt
+  //double density = 3.3164892e32; // neutrons / kt
+  
+  // microboone mass / density
+  double mass    = 0.085;        // kt
+  double density = 3.3164892e32; // neutrons/kt
   
   // adding in super-k parameters for debugging purposes
   //double mass    = 22.5;          // kt
@@ -104,10 +108,10 @@ int main(int argc, char * argv[]) {
     finalParams.push_back(atof(argv[8]));
   else
     finalParams.push_back(finalParams[4]);
-  if (double(int(finalParams[6])) != finalParams[6]) {
-    std::cerr << "Error! Number of observed events ( = " << finalParams[6] << " ) must be an integer!" << std::endl;
-    exit(1);
-  }
+  //if (double(int(finalParams[6])) != finalParams[6]) {
+  //  std::cerr << "Error! Number of observed events ( = " << finalParams[6] << " ) must be an integer!" << std::endl;
+  //  exit(1);
+  //}
 
   // figure out limits
   double xmin[4];

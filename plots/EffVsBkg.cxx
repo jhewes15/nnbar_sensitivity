@@ -13,7 +13,7 @@ void EffVsBkg() {
     return;
   }
   
-  TH2 * h = new TH2D("h", "", 100, 0, 100, 100, 0, 40);
+  TH2 * h = new TH2D("h", "", 100, 0, 100,40, 0, 40);
   
   string line;
 
