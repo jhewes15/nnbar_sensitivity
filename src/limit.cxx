@@ -117,7 +117,8 @@ int main(int argc, char * argv[]) {
   double xmin[4];
   double xmax[4];
 
-  double width_range = 1e-30;
+//  double width_range - 1e-30;
+  double width_range = 1e-25;
   double integral_range = 5;
 
   xmin[0] = 0;
@@ -141,7 +142,8 @@ int main(int argc, char * argv[]) {
   
   double norm = 1 / val;
   double minimum = 0;
-  double maximum = 1e-30;
+//  double maximum = 1e-30;
+  double maximum = 1e-25;
   double accuracy = 1e-3;
   double width;
 
