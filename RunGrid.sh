@@ -51,18 +51,9 @@ You must specify a filename using the -r option!"
   exit 1
 fi
 
-workdir="/uboone/app/users/jhewes15/nnbar_sensitivity"
+workdir="/uboone/app/users/jhewes15/nnbar/sensitivity"
 
-echo ifdh cp -D ${workdir}/input/${filename}.txt ${CONDOR_DIR_INPUT}
-ifdh cp -D ${workdir}/input/${filename}.txt ${CONDOR_DIR_INPUT}
-
-if [ ! -f ${workdir}/src/limit ]; then
-  echo "Error! You must build src/limit before running this script!"
-  exit 1
-else
-  ifdh cp -D ${workdir}/src/limit ${CONDOR_DIR_INPUT}
-  chmod 777 ${CONDOR_DIR_INPUT}/limit
-fi
+chmod 777 ${CONDOR_DIR_INPUT}/limit
 
 infile=${CONDOR_DIR_INPUT}/${filename}.txt
 echo "infile is ${infile}"
