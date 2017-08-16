@@ -54,7 +54,7 @@ num_jobs=100
 mail=""
 
 echo
-echo jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N ${num_jobs} ${mail} file://${workdir}/RunGrid.sh -r ${filename}
+echo jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N ${num_jobs} -f ${workdir}/input/${filename}.txt -f ${workdir}/src/limit ${mail} file://${workdir}/RunGrid.sh -r ${filename}
 echo
-jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N ${num_jobs} ${mail} file://${workdir}/RunGrid.sh -r ${filename}
+jobsub_submit -G uboone --OS=SL6 --resource-provides=usage_model=opportunistic -N ${num_jobs} -f ${workdir}/input/${filename}.txt -f ${workdir}/src/limit ${mail} file://${workdir}/RunGrid.sh -r ${filename}
 
