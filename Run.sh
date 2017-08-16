@@ -14,11 +14,12 @@ Usage: $(basename "$0")
                         Should be in format <current_directory>/input/<filename>.txt
                         Look at input_list.txt for an example of how this file looks
         -n            Select a subset to process (optional)
+        -t            Test mode - output to terminal instead of file
 "
 
 # Parse optional arguments.
 
-while getopts "hr:n:" option; do
+while getopts "hr:n:t" option; do
   case "${option}" in
     h)  echo "${usage}"
         exit
@@ -26,6 +27,8 @@ while getopts "hr:n:" option; do
     r)  filename=${OPTARG}
         ;;
     n)  subset=${OPTARG}
+        ;;
+    t)  test="Y"
         ;;
     :)  printf "Missing argument for -%s\n" "${OPTARG}" >&2
         echo "${usage}" >&2
@@ -47,7 +50,7 @@ You must specify a filename using the -r option!"
   exit 1
 fi
 
-workdir=`pwd`
+workdir=/Users/jhewes15/neutrino/nnbar_sensitivity
 
 infile=${workdir}/input/${filename}.txt
 outfile=${workdir}/output/${filename}.txt
@@ -81,10 +84,13 @@ for i in `seq $min $max`; do
   sig_eff=`echo ${params} | cut -f5 -d " "`
   val_bkg=`echo ${params} | cut -f6 -d " "`
   sig_bkg=`echo ${params} | cut -f7 -d " "`
-  n_obs=`echo ${params}   | cut -f8 -d " "`
 
   if [ ! -z "${name}" ]; then
-    ${workdir}/src/limit ${name} ${val_exp} ${sig_exp} ${val_eff} ${sig_eff} ${val_bkg} ${sig_bkg} ${n_obs} >> ${outfile}
+    if [ -z "${test}" ]; then
+      ${workdir}/src/limit ${name} ${val_exp} ${sig_exp} ${val_eff} ${sig_eff} ${val_bkg} ${sig_bkg} >> ${outfile}
+    else
+      ${workdir}/src/limit ${name} ${val_exp} ${sig_exp} ${val_eff} ${sig_eff} ${val_bkg} ${sig_bkg}
+    fi
     time=`date +"%T"`
     echo "Done calculating limit for run ${name}; timestamp is ${time}"
   fi

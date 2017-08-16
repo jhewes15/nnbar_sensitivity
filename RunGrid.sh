@@ -70,8 +70,10 @@ echo "infile is ${infile}"
 n=`wc -l ${infile} | sed -e 's/^[ \t]*//' | cut -f1 -d " "`
 
 echo "subset is ${PROCESS}"
-min=$((40 * PROCESS))
-max=$((min + 40))
+#min=$((40 * PROCESS))
+min=$((51 * PROCESS))
+#max=$((min + 40))
+max=$((min + 51))
 min=$((min + 1))
 
 outfile=${CONDOR_DIR_INPUT}/${filename}_${PROCESS}.txt
