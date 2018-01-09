@@ -1,5 +1,6 @@
 *.png
 src/limit
+src/limit_nosystematics
 input/*
 output/*
 

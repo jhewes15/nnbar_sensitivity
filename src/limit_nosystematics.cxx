@@ -13,6 +13,7 @@ double global_eff = 0;
 double global_bkg = 0;
 
 double poisson_threshold = 10;
+// double poisson_threshold = 20;
 
 // Utility function
 void print(std::vector<double> params)
@@ -20,11 +21,8 @@ void print(std::vector<double> params)
   std::cout << std::endl;
   std::cout << "~~~~~~~~~~~~~ INPUT PARAMETERS ~~~~~~~~~~~~~" << std::endl;
   std::cout << std::left << std::setw(20) << "Exposure"         << std::right << std::setw(20) << params[0] << std::endl;
-  std::cout << std::left << std::setw(20) << "Exposure (sig)"   << std::right << std::setw(20) << params[1] << std::endl;
   std::cout << std::left << std::setw(20) << "Efficiency"       << std::right << std::setw(20) << params[2] << std::endl;
-  std::cout << std::left << std::setw(20) << "Efficiency (sig)" << std::right << std::setw(20) << params[3] << std::endl;
   std::cout << std::left << std::setw(20) << "Background"       << std::right << std::setw(20) << params[4] << std::endl;
-  std::cout << std::left << std::setw(20) << "Background (sig)" << std::right << std::setw(20) << params[5] << std::endl;
   std::cout << std::left << std::setw(20) << "Event rate"       << std::right << std::setw(20) << params[6] << std::endl;
   std::cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl;
   std::cout << std::endl;
@@ -62,104 +60,17 @@ double factorial(double n)
   return n_factorial;
 }
 
-int f_combined(unsigned ndim, const double * x, void * params, unsigned fdim, double * fval)
-{
-  // Get input variables
-  double width      = x[0];
-  double exposure   = x[1];
-  double efficiency = x[2];
-  double background = x[3];
-
-  std::vector<double> integralParams = *((std::vector<double> *) params);
-
-  global_eff = integralParams[2];
-  global_bkg = integralParams[4];
-
-  if (verbose)
-    std::cout << "--------------------------------------------" << std::endl;
-
-  // Evaluate probability distributions for variables
-  if (verbose) {
-    std::cout << std::left << std::setw(20) << "width" << std::right << std::setw(20) << width << std::endl;
-    std::cout << std::left << std::setw(20) << "exposure" << std::right << std::setw(20) << exposure
-        << " (" << integralParams[0] << "->" << integralParams[1] << ")" << std::endl;
-    std::cout << std::left << std::setw(20) << "efficiency" << std::right << std::setw(20) << efficiency
-        << " (" << integralParams[2] << "->" << integralParams[3] << ")" << std::endl;
-    std::cout << std::left << std::setw(20) << "background" << std::right << std::setw(20) << background
-        << " (" << integralParams[4] << "->" << integralParams[5] << ")" << std::endl;
-  }
-
-  double p_exposure   = gaus(exposure  , integralParams[0], integralParams[1]);
-  double p_efficiency = gaus(efficiency, integralParams[2], integralParams[3]);
-  double p_background = gaus(background, integralParams[4], integralParams[5]);
-  double p_width      = heaviside(width);
-
-  if (verbose) {
-    std::cout << std::left << std::setw(20) << "p_exposure" << std::right << std::setw(20) << p_exposure << std::endl;
-    std::cout << std::left << std::setw(20) << "p_efficiency" << std::right << std::setw(20) << p_efficiency << std::endl;
-    std::cout << std::left << std::setw(20) << "p_background" << std::right << std::setw(20) << p_background << std::endl;
-    std::cout << std::left << std::setw(20) << "p_width" << std::right << std::setw(20) << p_width << std::endl;
-  }
-
-  if (std::isnan(p_efficiency)) {
-    if (verbose) std::cout << "Integral failed due to nan p_efficiency." << std::endl;
-    return 1;
-  }
-  else if (std::isnan(p_background)) {
-    if (verbose) std::cout << "Integral failed due to nan p_background." << std::endl;
-    return 1;
-  }
-
-  // Get some other useful variables
-  double n_factorial = factorial(integralParams[6]);
-  if (verbose)
-    std::cout << std::left << std::setw(20) << "n_factorial" << std::right << std::setw(20) << n_factorial << std::endl;
-  if (std::isinf(n_factorial)) {
-    if (verbose)
-      std::cout << "Integral failed due to infinite n_factorial." << std::endl;
-    return 1;
-  }
-
-  double param = (exposure * efficiency * width) + background;
-  if (verbose)
-    std::cout << std::left << std::setw(20) << "param" << std::right << std::setw(20) << param << std::endl;
-
-  // Evaluate Bayesian function
-  double var;
-  if (param < 10) var = (exp(-1 * param) * pow(param, integralParams[6])) / n_factorial;
-  else var = gaus(integralParams[6],param,sqrt(param));
-  if (verbose)
-    std::cout << std::left << std::setw(20) << "variable" << std::right << std::setw(20) << var << std::endl;
-  if (std::isnan(var)) {
-    if (verbose)
-      std::cout << "Integral failed due to nan bayesian." << std::endl;
-    return 1;
-  }
-  else if (std::isinf(var)) {
-    if (verbose)
-      std::cout << "Integral failed due to infinite bayesian." << std::endl;
-    return 1;
-  }
-
-  // Put it all together
-  double everything = var * p_exposure * p_efficiency * p_background * p_width;
-  if (verbose)
-    std::cout << std::left << std::setw(20) << "everything" << std::right << std::setw(20) << everything << std::endl;
-  fval[0] = everything;
-
-  return 0;
-}
-
 // 4D integral of poisson probability distribution, including lifetime variable
 int f_poisson(unsigned ndim, const double * x, void * params, unsigned fdim, double * fval)
 {
-  // Get input variables
-  double width      = x[0];
-  double exposure   = x[1];
-  double efficiency = x[2];
-  double background = x[3];
 
   std::vector<double> integralParams = *((std::vector<double> *) params);
+
+  // Get input variables
+  double width      = x[0];
+  double exposure   = integralParams[0];
+  double efficiency = integralParams[2];
+  double background = integralParams[4];
 
   global_eff = integralParams[2];
   global_bkg = integralParams[4];
@@ -178,9 +89,9 @@ int f_poisson(unsigned ndim, const double * x, void * params, unsigned fdim, dou
         << " (" << integralParams[4] << "->" << integralParams[5] << ")" << std::endl;
   }
 
-  double p_exposure   = gaus(exposure  , integralParams[0], integralParams[1]);
-  double p_efficiency = gaus(efficiency, integralParams[2], integralParams[3]);
-  double p_background = gaus(background, integralParams[4], integralParams[5]);
+  double p_exposure   = 1;
+  double p_efficiency = 1;
+  double p_background = 1;
   double p_width      = heaviside(width);
 
   if (verbose) {
@@ -240,13 +151,14 @@ int f_poisson(unsigned ndim, const double * x, void * params, unsigned fdim, dou
 // 4D integral of poisson probability distribution, including lifetime variable
 int f_gaussian(unsigned ndim, const double * x, void * params, unsigned fdim, double * fval)
 {
-  // Get input variables
-  double width      = x[0];
-  double exposure   = x[1];
-  double efficiency = x[2];
-  double background = x[3];
 
   std::vector<double> integralParams = *((std::vector<double> *) params);
+
+  // Get input variables
+  double width      = x[0];
+  double exposure   = integralParams[0];
+  double efficiency = integralParams[2];
+  double background = integralParams[4];
 
   global_eff = integralParams[2];
   global_bkg = integralParams[4];
@@ -265,9 +177,9 @@ int f_gaussian(unsigned ndim, const double * x, void * params, unsigned fdim, do
         << " (" << integralParams[4] << "->" << integralParams[5] << ")" << std::endl;
   }
 
-  double p_exposure   = gaus(exposure  , integralParams[0], integralParams[1]);
-  double p_efficiency = gaus(efficiency, integralParams[2], integralParams[3]);
-  double p_background = gaus(background, integralParams[4], integralParams[5]);
+  double p_exposure   = 1;
+  double p_efficiency = 1;
+  double p_background = 1;
   double p_width      = heaviside(width);
 
   if (verbose) {
@@ -307,21 +219,19 @@ int f_gaussian(unsigned ndim, const double * x, void * params, unsigned fdim, do
 int main(int argc, char * argv[]) {
 
   clock_t start = clock();
-
-  bool use_uboone = false;
-  if ((argc == 10 && strcmp(argv[9],"0")!=0)||(argc == 9 && strcmp(argv[8],"0")!=0)) use_uboone = true;
-
-  double mass; // kt
-  if (use_uboone) mass = 0.089;
-  else mass = 40;
-  double density = 3.3164892e32; // neutrons / kt 
   
+  bool use_uboone = false;
+  if ((argc==10&&strcmp(argv[9],"0")!=0)||(argc==9&&strcmp(argv[8],"0")!=0)) use_uboone = true;
+
+  double mass = 40; // kt
+  if (use_uboone) mass = 0.089;
+  double density = 3.3164892e32; // neutrons / kt
   // dune mass / density
-  //double mass    = 40;           // kt
-  //double density = 3.3164892e32; // neutrons / kt
+  // double mass    = 40;           // kt
+  // double density = 3.3164892e32; // neutrons / kt
 
   // microboone mass / density
-  //double mass    = 0.089;        // kt
+  //double mass    = 0.085;        // kt
   //double density = 3.3164892e32; // neutrons/kt
   
   // adding in super-k parameters for debugging purposes
@@ -343,7 +253,7 @@ int main(int argc, char * argv[]) {
   initialParams.reserve(6);
   for (int i = 2; i < 8; i++)
     initialParams.push_back(atof(argv[i]));
-
+  
   // Convert input values into their final form
   std::vector<double> finalParams;
   finalParams.reserve(7);
@@ -351,7 +261,9 @@ int main(int argc, char * argv[]) {
   finalParams.push_back(initialParams[1] * finalParams[0]);
   finalParams.push_back(initialParams[2]);
   finalParams.push_back(initialParams[3] * finalParams[2]);
+  // UBOONE
   finalParams.push_back(initialParams[4] * mass * initialParams[0]);
+  //finalParams.push_back(initialParams[4] * initialParams[0]);
   finalParams.push_back(initialParams[5] * finalParams[4]);
   if (argc == 10)
     finalParams.push_back(atof(argv[8]));
@@ -363,57 +275,49 @@ int main(int argc, char * argv[]) {
   //}
 
   // figure out limits
-  double xmin[4];
-  double xmax[4];
+  double xmin[1];
+  double xmax[1];
 
   double width_range = 1e-30;
-  //double width_range = 1e-25;
-  //double width_range = 1e-20;
+  if (use_uboone) width_range = 1e-23;
+  //if (use_uboone) width_range = 1e-23;
   double integral_range = 5;
 
   xmin[0] = 0;
-  xmin[1] = finalParams[0] - (integral_range * finalParams[1]);
-  xmin[2] = finalParams[2] - (integral_range * finalParams[3]);
-  xmin[3] = finalParams[4] - (integral_range * finalParams[5]);
-
   xmax[0] = width_range;
-  xmax[1] = finalParams[0] + (integral_range * finalParams[1]);
-  xmax[2] = finalParams[2] + (integral_range * finalParams[3]);
-  xmax[3] = finalParams[4] + (integral_range * finalParams[5]);
-
-  if (xmin[1] < 0) xmin[1] = 0;
-  if (xmin[2] < 0) xmin[2] = 0;
-  if (xmin[3] < 0) xmin[3] = 0;
-
-  if (xmax[2] > 1) xmax[2] = 1;
 
   if (verbose) print(finalParams);
-
 
   //std::cout << "Background rate is " << finalParams[4] << ". " << std::endl;
   //if (finalParams[4] < poisson_threshold) std::cout << "Using Poisson distribution!" << std::endl;
   //else std::cout << "Using Gaussian distribution!" << std::endl;
 
-  double accuracy = 1e-3;
 
   double val, err;
   int keep_going;
-  // int keep_going = hcubature(1,f_combined,&finalParams,4,xmin,xmax,0,0,accuracy,ERROR_INDIVIDUAL,&val,&err);
-  if (finalParams[4] < poisson_threshold) keep_going = hcubature(1,f_poisson,&finalParams,4,xmin,xmax,0,0,accuracy,ERROR_INDIVIDUAL,&val,&err);
-  else keep_going = hcubature(1,f_gaussian,&finalParams,4,xmin,xmax,0,0,accuracy,ERROR_INDIVIDUAL,&val,&err);
+  if (finalParams[4] < poisson_threshold) keep_going = hcubature(1, f_poisson, &finalParams, 1, xmin, xmax, 0, 0, 1e-3, ERROR_INDIVIDUAL, &val, &err);
+  else keep_going = hcubature(1, f_gaussian, &finalParams, 1, xmin, xmax, 0, 0, 1e-3, ERROR_INDIVIDUAL, &val, &err);
+  // keep_going = hcubature(1, f_gaussian, &finalParams, 4, xmin, xmax, 0, 0, 1e-3, ERROR_INDIVIDUAL, &val, &err);
 
-  if (val == 0) {
-    width_range = 1e-35; 
-    xmax[0] = width_range;
-    // keep_going = hcubature(1,f_combined,&finalParams,4,xmin,xmax,0,0,accuracy,ERROR_INDIVIDUAL,&val,&err);
-    if (finalParams[4] < poisson_threshold) keep_going = hcubature(1,f_poisson,&finalParams,4,xmin,xmax,0,0,accuracy,ERROR_INDIVIDUAL,&val,&err);
-    else keep_going = hcubature(1,f_gaussian,&finalParams,4,xmin,xmax,0,0,accuracy,ERROR_INDIVIDUAL,&val,&err);
-  }
+  // if (val == 0) {
+  //   width_range = 1e-32;
+  //   xmax[0] = width_range;
+  //   if (finalParams[4] < poisson_threshold) keep_going = hcubature(1, f_poisson, &finalParams, 1, xmin, xmax, 0, 0, 1e-3, ERROR_INDIVIDUAL, &val, &err);
+  //   else keep_going = hcubature(1, f_gaussian, &finalParams, 1, xmin, xmax, 0, 0, 1e-3, ERROR_INDIVIDUAL, &val, &err);
+  // }
 
   double norm = 1 / val;
+
+  if (std::isnan(norm) || std::isinf(norm)) {
+    std::cout << "val is infinite or norm, quitting." << std::endl;
+    return 1;
+  }
+
   double minimum = 0;
   double maximum = width_range;
   //double maximum = 1e-25;
+  double accuracy = 1e-3;
+  // double accuracy = 1e-5;
   double width;
 
   //std::cout << "Background rate is " << finalParams[4] << " events." << std::endl;
@@ -424,13 +328,11 @@ int main(int argc, char * argv[]) {
     if (keep_going != 0) break;
     xmax[0] = minimum + ((maximum - minimum) / 2);
     if (verbose) std::cout << "Running hcubature in range " << xmin[0] << " -> " << xmax[0] << "." << std::endl;
-    // keep_going = hcubature(1,f_combined,&finalParams,4,xmin,xmax,0,0,accuracy,ERROR_INDIVIDUAL,&val,&err);
-    if (finalParams[4] < poisson_threshold) keep_going = hcubature(1, f_poisson, &finalParams, 4, xmin, xmax, 0, 0, accuracy, ERROR_INDIVIDUAL, &val, &err);
-    else keep_going = hcubature(1, f_gaussian, &finalParams, 4, xmin, xmax, 0, 0, accuracy, ERROR_INDIVIDUAL, &val, &err);
+    if (finalParams[4] < poisson_threshold) keep_going = hcubature(1, f_poisson, &finalParams, 1, xmin, xmax, 0, 0, 1e-3, ERROR_INDIVIDUAL, &val, &err);
+    else keep_going = hcubature(1, f_gaussian, &finalParams, 1, xmin, xmax, 0, 0, 1e-3, ERROR_INDIVIDUAL, &val, &err);
+    // keep_going = hcubature(1, f_gaussian, &finalParams, 4, xmin, xmax, 0, 0, 1e-3, ERROR_INDIVIDUAL, &val, &err);
     if (verbose) std::cout << "Current val is " << val << "." << std::endl;
     double diff = (val * norm) - 0.9;
-    //std::cout << "Current val is " << val << ", current diff is " << diff << "." << std::endl;
-    //std::cout << "Current width is " << xmax[0] << ", current diff is " << diff << "." << std::endl;
     if (std::abs(diff) < accuracy) {
       width = xmax[0];
       keep_going = 1;
@@ -440,6 +342,6 @@ int main(int argc, char * argv[]) {
   }
 
   double limit = 1 / width;
-  std::cout << run_name.c_str() << " " << limit << std::endl;
+  std::cout << run_name.c_str() << " " << limit << " " << (finalParams[4] > poisson_threshold) << std::endl;
 }
 

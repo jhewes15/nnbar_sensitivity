@@ -13,13 +13,15 @@ Usage: $(basename "$0")
         -r            Input filename (required)
                         Should be in format <current_directory>/input/<filename>.txt
                         Look at input_list.txt for an example of how this file looks
+        -s            Disable systematics (optional)
         -n            Select a subset to process (optional)
+        -u            Use MicroBooNE mass (optional)
         -t            Test mode - output to terminal instead of file
 "
 
 # Parse optional arguments.
 
-while getopts "hr:n:t" option; do
+while getopts "hr:n:tsu" option; do
   case "${option}" in
     h)  echo "${usage}"
         exit
@@ -29,6 +31,10 @@ while getopts "hr:n:t" option; do
     n)  subset=${OPTARG}
         ;;
     t)  test="Y"
+        ;;
+    s)  systematics="N"
+        ;;
+    u)  uboone="1"
         ;;
     :)  printf "Missing argument for -%s\n" "${OPTARG}" >&2
         echo "${usage}" >&2
@@ -50,10 +56,24 @@ You must specify a filename using the -r option!"
   exit 1
 fi
 
+if [ -z "${systematics}" ]; then
+  exe=limit
+else
+  exe=limit_nosystematics
+fi
+
+if [ -z "${uboone}" ]; then
+  uboone="0"
+fi
+
 workdir=/Users/jhewes15/neutrino/nnbar_sensitivity
 
 infile=${workdir}/input/${filename}.txt
-outfile=${workdir}/output/${filename}.txt
+if [ -z "${systematics}" ]; then
+  outfile=${workdir}/output/${filename}.txt
+else
+  outfile=${workdir}/output/${filename}_nosystematics.txt
+fi
 if [ -f ${outfile} ]; then
   rm ${outfile}
 fi
@@ -87,9 +107,9 @@ for i in `seq $min $max`; do
 
   if [ ! -z "${name}" ]; then
     if [ -z "${test}" ]; then
-      ${workdir}/src/limit ${name} ${val_exp} ${sig_exp} ${val_eff} ${sig_eff} ${val_bkg} ${sig_bkg} >> ${outfile}
+      ${workdir}/src/${exe} ${name} ${val_exp} ${sig_exp} ${val_eff} ${sig_eff} ${val_bkg} ${sig_bkg} ${uboone} >> ${outfile}
     else
-      ${workdir}/src/limit ${name} ${val_exp} ${sig_exp} ${val_eff} ${sig_eff} ${val_bkg} ${sig_bkg}
+      ${workdir}/src/${exe} ${name} ${val_exp} ${sig_exp} ${val_eff} ${sig_eff} ${val_bkg} ${sig_bkg} ${uboone}
     fi
     time=`date +"%T"`
     echo "Done calculating limit for run ${name}; timestamp is ${time}"
